@@ -230,6 +230,20 @@ describe('theme colors', () => {
     expect(await colorUnder($, /^O$/, '<grad theme="ocean">Ocean text</grad>')).toBe(THEMES.ocean!.title[0])
   })
 
+  test('the crayon theme draws its warm accents in orange, never pink', async () => {
+    const hueOf = (hex: string) => {
+      const [red, green, blue] = [1, 3, 5].map(offset => parseInt(hex.slice(offset, offset + 2), 16) / 255) as [number, number, number]
+      const brightest = Math.max(red, green, blue)
+      const chroma = brightest - Math.min(red, green, blue)
+      if (chroma === 0) return 0
+      const sector = brightest === red ? (green - blue) / chroma : brightest === green ? (blue - red) / chroma + 2 : (red - green) / chroma + 4
+      return (sector * 60 + 360) % 360
+    }
+    const colors = Object.values(THEMES.crayon!).flatMap(value => (typeof value === 'string' ? [value] : Array.isArray(value) ? value : []))
+    expect(colors.filter(color => { const hue = hueOf(color); return hue >= 300 && hue < 355 })).toEqual([])
+    expect([THEMES.crayon!.dot, THEMES.crayon!.bullets[0], THEMES.crayon!.h2].map(hueOf).every(hue => hue >= 20 && hue < 45)).toBe(true)
+  })
+
   test('the guide steers toward theme colors', async () => {
     expect(GUIDE).toContain('<c1>')
     expect(GUIDE).toContain('tinted toward the theme')
