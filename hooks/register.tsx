@@ -171,7 +171,7 @@ export const register: Register = on => {
     const text = restoreLines(e.props.text, await read($, written))
     const { Box, Text } = ctx.t
     const tree: RenderElement = (
-      <Box flexDirection="row">
+      <Box flexDirection="row" marginTop={1}>
         <Box width={2} flexShrink={0}>
           <Text color={ctx.p.dot}>{e.props.isFirstOfReply ? '⏺' : ' '}</Text>
         </Box>

@@ -100,6 +100,13 @@ describe('render', () => {
     }
   })
 
+  test('a reply keeps the blank row Claude Code draws above it', async $ => {
+    const ui = await $.ui.mount({ plugin: 'crayon', surface: 'terminal', component: 'AssistantMessage', props: reply('done') })
+    const row = await ui.find({ type: 'Box' })
+    expect(row?.props.marginTop).toBe(1)
+    await ui.unmount()
+  })
+
   test('tag colors land on Text props', async $ => {
     const ui = await $.ui.mount({
       plugin: 'crayon',
